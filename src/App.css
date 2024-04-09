@@ -1,0 +1,52 @@
+.main-layout{
+    @apply flex bg-red-100 h-screen w-full
+}
+.left{
+    @apply sm:p-2
+}
+.right{
+    @apply w-full h-full p-2
+}
+.sidebar{
+    @apply w-60 flex flex-col justify-between items-center bg-white shadow-sm sm:rounded-xl h-full 
+}
+.navbar{
+    @apply flex items-center justify-between rounded-sm w-full sm:hidden bg-white
+}
+.navbar-left{
+    @apply flex items-center gap-1
+}
+.navbar-title{
+    @apply text-lg font-bold
+}
+.sidebar{
+    transition: width 0.3s ease, opacity 0.3s ease;
+}
+.sidebar.collapsed{
+    @apply w-14
+}
+.sidebar-button{
+    transition: rotation 1s ease;
+}
+.menu-link{
+    @apply flex px-4 py-2 items-center gap-3 text-foreground hover:text-primary hover:bg-accent rounded-lg
+}
+
+.sidebar.collapsed .sidebar-up .menu .menu-link .menu-text{
+    @apply hidden
+}
+.sidebar.collapsed .sidebar-up .logo .logo-text{
+    @apply hidden
+}
+.sidebar.collapsed .sidebar-down .menu .menu-link .menu-text{
+    @apply hidden
+}
+.sidebar.collapsed .sidebar-down .user{
+    @apply p-0
+}
+.sidebar.collapsed .sidebar-down .user .avatar{
+    @apply hidden
+}
+.login-container{
+    @apply w-full h-screen flex justify-center items-center
+}
