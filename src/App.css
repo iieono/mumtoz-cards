@@ -8,7 +8,8 @@
     @apply w-full h-full
 }
 .sidebar{
-    @apply w-60 flex flex-col justify-between items-center bg-card shadow-xl dark:shadow-md dark:shadow-white sm:rounded-xl h-full 
+    @apply w-60 flex flex-col justify-between items-center bg-card shadow-xl dark:shadow-md  sm:rounded-xl h-full 
+    /* dark:sm:shadow-white */
 }
 .navbar{
     @apply flex items-center justify-between rounded-sm w-full sm:hidden bg-background p-1
@@ -97,7 +98,7 @@
   }
 
   .sign-page{
-    background: rgba(108, 21, 189, 0.6);
+    background: rgba(185, 12, 142, 0.7);
     background-image: url('assets/dark-bg.jpg');
     background-repeat: no-repeat;
     background-position: center center;
@@ -106,4 +107,14 @@
   
 .theme-switch{
     @apply w-full flex justify-between items-center p-2 px-4 rounded-lg hover:bg-accent overflow-hidden
+}
+
+.table-main{
+    @apply flex flex-col gap-2
+}
+.table-header{
+    @apply flex justify-between
+}
+.table-container{
+    @apply shadow-sm hover:shadow-md dark:shadow-accent rounded-md text-foreground bg-card
 }

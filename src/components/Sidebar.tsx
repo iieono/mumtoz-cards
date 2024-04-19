@@ -21,7 +21,7 @@ type Props = {};
 
 export default function Sidebar({}: Props) {
   const sidebar = useSelector((state: RootState) => state.settings.sidebar);
-  const theme = useSelector((state: RootState) => state.settings.theme);
+  const admin = useSelector((state: RootState) => state.auth.isAdmin)
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -64,6 +64,7 @@ export default function Sidebar({}: Props) {
         <Separator />
         <ScrollArea className={`menu ${sidebar && "sm:px-2"}`}>
           {menuList.map((item, index) => {
+            if(item.AdminPage && !admin) return
             const isActive = location.pathname === `${item.AdminPage ? '/admin' : ''}${item.LinkName}`;
             const activeClassName = isActive ? 'active' : '';
             return (
