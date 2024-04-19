@@ -12,14 +12,14 @@ function Navbar({}: Props) {
     <div className="navbar">
       <div className="navbar-left">
         <Button
-          variant="ghost"
+          variant="link"
           size="icon"
           className="flex sm:hidden"
           onClick={() => dispatch(toggleSidebar())}
         >
           <FiMenu className="text-xl text-foreground" />
         </Button>
-        <p className="navbar-title">Mumtoz</p>
+        <p className="navbar-title text-foreground">Mumtoz</p>
       </div>
       <div className="navbar-right"></div>
     </div>

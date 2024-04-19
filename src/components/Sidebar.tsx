@@ -1,5 +1,5 @@
 import menuList from "@/lib/menu";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import { FaChevronRight } from "react-icons/fa";
@@ -9,12 +9,21 @@ import { toggleSidebar } from "@/store/slices/settingsSlice";
 import { RootState } from "@/store/store";
 import { RxExit } from "react-icons/rx";
 import { ScrollArea } from "./ui/scroll-area";
+import MumtozLogo from "@/assets/mumtoz-logo-no-bg.png";
+import {
+  Sheet,
+
+  SheetTrigger,
+} from "./ui/sheet";
+import Settings from "./Settings";
 
 type Props = {};
 
 export default function Sidebar({}: Props) {
-    const sidebar = useSelector((state: RootState) => state.settings.sidebar)
-    const dispatch = useDispatch()
+  const sidebar = useSelector((state: RootState) => state.settings.sidebar);
+  const theme = useSelector((state: RootState) => state.settings.theme);
+  const dispatch = useDispatch();
+  const location = useLocation();
 
   return (
     <div
@@ -22,11 +31,11 @@ export default function Sidebar({}: Props) {
         sidebar ? "" : "hidden sm:flex collapsed"
       }`}
     >
-      <div className="absolute top-8 -right-2">
+      <div className="absolute top-12 -right-2">
         <Button
           variant="outline"
           size="icon"
-          className="w-min h-min p-2"
+          className="w-min h-min p-2 text-foreground"
           onClick={() => dispatch(toggleSidebar())}
         >
           <FaChevronRight
@@ -36,52 +45,66 @@ export default function Sidebar({}: Props) {
       </div>
 
       <div className="sidebar-up h-full w-full flex flex-col gap-3 overflow-hidden">
-        <div className="logo flex items-center px-4 pt-4 py-2">
+        <div
+          className={`logo flex items-center pt-4 py-2 ${
+            sidebar ? "px-4" : "justify-center"
+          }`}
+        >
           <div className="w-8 h-8 rounded-full">
             <img
-              src="https://cdn.pixabay.com/photo/2014/04/02/10/16/fire-303309_960_720.png"
+              src={MumtozLogo}
               alt="logo image"
-              className="max-w-full rounded-full logo-image"
+              className="max-w-full rounded-full logo-image dark:invert"
             />
           </div>
-          <p className="text-lg pl-3 font-bold logo-text">Mumtoz</p>
+          <p className="text-lg pl-3 text-foreground logo-text permanent-marker-regular">
+            Mumtoz Cards
+          </p>
         </div>
         <Separator />
-        <ScrollArea className="menu">
-          {menuList.map((item, index) => (
-            <Link to={item.LinkName} key={index} className="menu-link">
-              <item.Icon className="text-xl" />
-              <p className="menu-text">{item.Title}</p>
-            </Link>
-          ))}
-
+        <ScrollArea className={`menu ${sidebar && "sm:px-2"}`}>
+          {menuList.map((item, index) => {
+            const isActive = location.pathname === `${item.AdminPage ? '/admin' : ''}${item.LinkName}`;
+            const activeClassName = isActive ? 'active' : '';
+            return (
+              <Link
+                to={`${item.AdminPage ? '/admin' : ''}${item.LinkName}`}
+                key={index}
+                className={`menu-link ${sidebar ? "" : "rounded-none"} ${activeClassName}`}
+              >
+                <item.Icon className="text-2xl" />
+                <p className="menu-text">{item.Title}</p>
+              </Link>
+            );
+          })}
         </ScrollArea>
         {/* <div className="menu">
         </div> */}
       </div>
       <Separator />
       <div className="sidebar-down self-end w-full flex flex-col">
-        <div className="menu">
-            <Link to='settings' className="menu-link">
-                <CiSettings className="text-xl" />
-                <p className="menu-text">Settings</p>
-            </Link>
+        <div className={`menu ${sidebar && "sm:p-2"}`}>
+          <Sheet>
+            <SheetTrigger asChild>
+              <div className="menu-link bottom">
+                <CiSettings className="text-2xl" />
+                <p className="menu-text">Sozlamalar</p>
+              </div>
+            </SheetTrigger>
+            <Settings />
+          </Sheet>
         </div>
-        <div className="user flex justify-between p-2 px-4 bg-blue-50">
-            <div className="flex flex-col avatar"> 
-                <p className="text-lg font-bold">John Doe</p>
-                <p className="text-xs -mt-1 text-foreground">Admin</p>
-                
-            </div>
-            <div>
-                <Button variant="ghost">
-                    <RxExit className="text-xl hover:text-primary"/>
-                </Button>
-            </div>
-
+        <div className="user flex justify-between p-2 px-4 bg-muted-background">
+          <div className="flex flex-col avatar">
+            <p className="text-lg font-bold text-foreground">John Doe</p>
+            <p className="text-xs -mt-1 text-muted-foreground">Admin</p>
+          </div>
+          <div>
+            <Button variant="ghost" className="">
+              <RxExit className="text-xl hover:text-primary text-foreground" />
+            </Button>
+          </div>
         </div>
-
-        
       </div>
     </div>
   );

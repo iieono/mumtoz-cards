@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { loginService } from '@/services/auth';
+import { toast } from 'react-hot-toast';
 
 interface FormData {
   username: string;
@@ -22,57 +24,79 @@ const Signin: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Do something with the form data, for example, send it to an API
-    console.log(formData);
+    if (!formData.username || !formData.password) {
+      toast.error('Please enter both username and password');
+      return;
+    }
+    const myPromise = loginService(formData.username, formData.password);
+
+    toast.promise(
+      myPromise,
+      {
+        loading: 'Loading',
+        success: (data) => `Successfully logged in as ${data.username}`,
+        error: (err) => `Login failed: ${err.toString()}`,
+      },
+      {
+        style: {
+          minWidth: '250px',
+        },
+        success: {
+          duration: 5000,
+          icon: '🔥',
+        },
+      }
+    );
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="absolute top-0 -z-10 h-full w-full bg-white"><div className="absolute bottom-auto left-auto right-0 top-0 h-[500px] w-[500px] -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(173,109,244,0.5)] opacity-50 blur-[80px]"></div></div>
-      <div className="absolute top-0 z-[-2] h-screen w-screen bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
-      <div className="w-full max-w-md">
-        <Card>
-          <CardHeader>
-            <CardTitle>Mumtoz Cards</CardTitle>
-            <CardDescription>Foydalanuvchi ma'lumotlaringizni kiriting</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-                  Username
-                </label>
-                <Input
-                  type="text"
-                  id="username"
-                  name="username"
-                  placeholder="Username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  className="w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                  Password
-                </label>
-                <Input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full"
-                />
-              </div>
-              <Button type="submit" className="w-full">Kirish </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+    <div className="flex sign-page justify-center items-center h-screen">
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="w-full max-w-md ">
+        <div className="hidden sm:flex absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#fff4_1px,transparent_1px),linear-gradient(to_bottom,#fff4_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
+          <Card className='py-5 px-5 h-full sm:h-max bg-transparent sm:backdrop-blur-lg border-none sm:shadow-xl'>
+            <CardHeader>
+              <CardTitle className="text-[#2e2e2e]">Mumtoz Cards</CardTitle>
+              <CardDescription className='text-white'>Foydalanuvchi ma'lumotlaringizni kiriting</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form autoComplete="off" onSubmit={handleSubmit} className='flex flex-col gap-3'>
+                <div className="mb-4">
+                  <label htmlFor="username" className="block text-sm font-medium text-white mb-1">
+                    Username
+                  </label>
+                  <Input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    className="w-full bg-input"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="password" className="block text-sm font-medium text-white mb-1">
+                    Password
+                  </label>
+                  <Input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full bg-input border-input"
+                  />
+                </div>
+                <Button type="submit" className="w-full">Kirish </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </Suspense>
     </div>
   );
 }
